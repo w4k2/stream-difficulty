@@ -142,12 +142,8 @@ class StreamGenerator:
             if difficulty_n_drifts > 0
             else np.ones(self.n_chunks)
         )
-        _directions = [np.random.uniform(-1,1,size=self.n_features) for c in range(self.n_classes)]
-        # Todo: Odległość od środka układu współrzędnych = 1 
-        # + skupianie się i rozchodzenie klas, niekoniecznie przeskok kawałek dalej
-        _directions[0] = np.zeros((self.n_features))
         
-        return _probabilities, _directions
+        return _probabilities
 
     def _make_classification(self):
         np.random.seed(self.random_state)
@@ -226,7 +222,7 @@ class StreamGenerator:
         # Prepare concept sigmoids if there are difficulty drifts
         if self.difficulty_n_drifts > 0:
             # Get period and probabilities
-            self.difficulty_probabilities, self.directions = self._difficulty_sigmoid(
+            self.difficulty_probabilities = self._difficulty_sigmoid(
                 self.difficulty_concept_sigmoid_spacing, self.difficulty_n_drifts
             )
 
@@ -353,13 +349,20 @@ class StreamGenerator:
             cX, cy = self.X[start:end], self.y[start:end]
             
             if hasattr(self, "difficulty_concept_sigmoid_spacing"):
-                
                 difficulty = self.difficulty_probabilities[self.chunk_id]
                 X_std = np.std(cX, axis=0)
+                centre_of_mass = np.mean(cX, axis=0)
+                class_centres_of_mass = np.array([np.mean(cX[cy==c], axis=0) for c in np.unique(cy)])
+
                 move_by = X_std*difficulty*self.difficulty_amplitude
                 
                 for c in np.unique(cy):
-                    cX[cy==c] += move_by*self.directions[c]
+                    vect_from_com = class_centres_of_mass[c]-centre_of_mass
+                    dist_from_centre = np.sqrt(np.sum(np.power(centre_of_mass-class_centres_of_mass[c],2)))
+                    # Powinno być 1 ale nie jest 
+                    vect_from_com /= dist_from_centre
+                                        
+                    cX[cy==c] += move_by*vect_from_com
                             
             self.current_chunk = (cX, cy)
 

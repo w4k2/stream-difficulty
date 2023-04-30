@@ -10,7 +10,7 @@ stream = StreamGenerator(n_chunks=n_chunks,
         n_drifts=0,
         concept_sigmoid_spacing=None,
         n_classes=2,
-        n_features=3,
+        n_features=2,
         n_informative=2,
         n_redundant=0,
         n_repeated=0,
@@ -20,8 +20,8 @@ stream = StreamGenerator(n_chunks=n_chunks,
         incremental=False,
         y_flip=0.01,
         difficulty_n_drifts=3,
-        difficulty_concept_sigmoid_spacing=5,
-        difficulty_amplitude=2)
+        difficulty_concept_sigmoid_spacing=99,
+        difficulty_amplitude=1)
 
 fig, ax = plt.subplots(1,2,figsize=(12,6))
 f1_comp = []
