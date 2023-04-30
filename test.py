@@ -47,5 +47,4 @@ for i in range(n_chunks):
     
     ax[0].cla()
     ax[1].cla()
-    # time.sleep(1)
 
