@@ -222,9 +222,11 @@ class StreamGenerator:
         # Prepare concept sigmoids if there are difficulty drifts
         if self.difficulty_n_drifts > 0:
             # Get period and probabilities
-            self.difficulty_probabilities = self._difficulty_sigmoid(
+            self.difficulty_probabilities = 1. - self._difficulty_sigmoid(
                 self.difficulty_concept_sigmoid_spacing, self.difficulty_n_drifts
             )
+            # print(self.difficulty_probabilities)
+            # exit()
 
         # Class selection for balancing
         self.balance_noise = np.random.rand(self.n_samples)
