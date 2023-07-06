@@ -49,11 +49,11 @@ stream = ConditionalEvidenceStream(X, y,
 
 rs = 3423
 clfs = [
-    MLPClassifier(random_state=rs, hidden_layer_sizes=(5)),
     MLPClassifier(random_state=rs, hidden_layer_sizes=(10)),
-    MLPClassifier(random_state=rs, hidden_layer_sizes=(25)),
+    MLPClassifier(random_state=rs, hidden_layer_sizes=(20)),
+    MLPClassifier(random_state=rs, hidden_layer_sizes=(35)),
+    MLPClassifier(random_state=rs, hidden_layer_sizes=(40)),
     MLPClassifier(random_state=rs, hidden_layer_sizes=(50)),
-    MLPClassifier(random_state=rs, hidden_layer_sizes=(75)),
 ]
 thresholds = [0.9, 0.85, 0.8, 0.75, 0.7]
 
