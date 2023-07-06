@@ -74,7 +74,7 @@ def main():
 
         cps = np.cumsum(cp, axis=0)
         
-        evidence = cp2evidence(cp).ravel()
+        evidence = cp2evidence(cp, CHUNK_SIZE).ravel()
 
         aa = ax[CONCEPT_MODES.index(concept_mode)]
         
