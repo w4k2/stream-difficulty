@@ -10,6 +10,7 @@ from utils import make_condition_map, mix_to_factor
 from Method import DDoS
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
+from tqdm import tqdm
 
 # Prepare stream 
 n_chunks = 1000
@@ -64,9 +65,7 @@ ddos = DDoS(clfs=clfs,
 # Process
 acc = np.full((len(clfs)+1, n_chunks), np.nan)
 
-for i in range(n_chunks):
-    print(i)
-
+for i in tqdm(range(n_chunks)):
     X, y = stream.get_chunk()
     
     if i<20:
