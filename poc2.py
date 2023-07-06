@@ -73,8 +73,7 @@ stream = ConditionalEvidenceStream(X, y,
 
 
 
-fig, ax = plt.subplots(2,2,figsize=(12,12))
-fig2, ax2 = plt.subplots(1,5,figsize=(20,4))
+fig, ax = plt.subplots(2,3,figsize=(15,12))
 
 ax = ax.ravel()
 
@@ -88,42 +87,56 @@ clfs = [
     MLPClassifier(random_state=rs, hidden_layer_sizes=(10)),
     MLPClassifier(random_state=rs, hidden_layer_sizes=(25)),
     MLPClassifier(random_state=rs, hidden_layer_sizes=(50)),
+    MLPClassifier(random_state=rs, hidden_layer_sizes=(75)),
 ]
-thresholds = [0.95, 0.85, 0.75, 0.65]
-switch_when = 15
+thresholds = [0.9, 0.85, 0.8, 0.75, 0.7]
+switch_when = 10
 switch_count = 0
 
 clf_acc = []
 all_clf_acc = [[] for i in range(len(clfs))]
+all_clf_supp = [[] for i in range(len(clfs))]
 
 
 curr_clf_id = 0
-max_epochs=150
+max_epochs=250
 
 for i in range(n_chunks):
     
     X, y = stream.get_chunk()
     # print(y)      
 
+    # # Przez pierwsze x chunków tylko szkolenie klasyfikatorów
+    # if i<20:
+    #     for clf in clfs:
+    #         clf.partial_fit(X,y,np.arange(10))
+    #         for e in range(max_epochs):
+    #             #TOSTY 
+    #             #H0: Próba pochodzi z populacji o rozkładzie normalnym
+    #             proba = clf.predict_proba(X)
+    #             max_proba = np.max(proba, axis=1)
+    #             stat, p = stats.shapiro(max_proba)
+    #             # print(stat, p)
+    #             if p>=0.05:
+    #                 # H0 potwierdzona = r. normalny
+    #                 print('BREAK')
+    #                 # exit()
+    #                 break
+    #             # H0 odrzucona = nienormalny
+    #             clf.partial_fit(X,y)
+             
     # Przez pierwsze x chunków tylko szkolenie klasyfikatorów
     if i<20:
         for clf in clfs:
             clf.partial_fit(X,y,np.arange(10))
             for e in range(max_epochs):
-                #TOSTY 
-                #H0: Próba pochodzi z populacji o rozkładzie normalnym
+                #ALE UCZMY JE TAK DŁUGO, ŻEBY MAX. WSPARCIE WYNOSIŁO ŚREDNIO 80% 
                 proba = clf.predict_proba(X)
-                max_proba = np.max(proba, axis=1)
-                stat, p = stats.shapiro(max_proba)
-                # print(stat, p)
-                if p>=0.05:
-                    # H0 potwierdzona = r. normalny
+                mean_proba = np.mean(np.max(proba, axis=1))
+                if mean_proba>0.8:
                     print('BREAK')
-                    # exit()
                     break
-                # H0 odrzucona = nienormalny
-                clf.partial_fit(X,y)
-                    
+                clf.partial_fit(X,y)       
         
 
     # Przez kolejne estymacja i tylko inferencja
@@ -156,10 +169,14 @@ for i in range(n_chunks):
 
         pred = clfs[curr_clf_id].predict(X)
         clf_acc.append(accuracy_score(y_pred=pred, y_true=y))
+        
         for c_id, c in enumerate(clfs): 
             all_clf_acc[c_id].append(accuracy_score(y_pred=c.predict(X), y_true=y))
-     
-     
+
+            mean_max_proba = np.mean(np.max(clfs[c_id].predict_proba(X), axis=1))
+            all_clf_supp[c_id].append(mean_max_proba)
+        
+        
     # PLOT 
     if i%10==0:
         
@@ -186,6 +203,15 @@ for i in range(n_chunks):
             ax[3].plot(temp, c=cols[c_id], alpha=0.1)
             ax[3].plot(gaussian_filter1d(temp, 3), label=c_id, c=cols[c_id])
         ax[3].set_ylim(0.1,1)
+        
+        ax[4].set_title('All classifiers suport')
+        all_clf_arr = np.array(all_clf_supp)
+        cols = plt.cm.coolwarm(np.linspace(0,1,len(clfs)))
+        for c_id in range(len(clfs)):
+            temp = all_clf_arr[c_id]
+            ax[4].plot(temp, c=cols[c_id], alpha=0.1)
+            ax[4].plot(gaussian_filter1d(temp, 3), label=c_id, c=cols[c_id])
+        ax[4].set_ylim(0.1,1)
         
         for a in ax:
             a.grid(ls=':')
