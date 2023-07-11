@@ -202,7 +202,7 @@ for i in range(n_chunks):
             ax[3].plot(gaussian_filter1d(temp, 3), label=c_id, c=cols[c_id])
         ax[3].set_ylim(0.1,1)
         
-        ax[4].set_title('All classifiers suport')
+        ax[4].set_title('All classifiers support')
         all_clf_arr = np.array(all_clf_supp)
         cols = plt.cm.coolwarm(np.linspace(0,1,len(clfs)))
         for c_id in range(len(clfs)):

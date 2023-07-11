@@ -1,27 +1,27 @@
 """
-Difficulty Domain Selector
+Certainty-based Domain Selector
 """
 
 import numpy as np
 
-class DDoS:
+class CDoS:
     def __init__(self, clfs, thresholds, max_training_epochs, training_support_level, switch_when=10):
-        self.clfs = clfs
-        self.thresholds = thresholds
-        self.switch_when = switch_when
+        self.clfs = clfs # lista klasyfikatorów
+        self.thresholds = thresholds # lista progów (tej samej długości co lista klasyfiaktorów) i najwyższy próg musi nie być przekraczalny bo się wysypie
+        self.switch_when = switch_when # ile pod rząd musi przekroczyć próg
         
-        self.max_training_epochs = max_training_epochs
-        self.training_support_level = training_support_level
+        self.training_support_level = training_support_level # do tej wartości wsparcia uczone są wszystkie klasyfikatory
+        self.max_training_epochs = max_training_epochs # ale jest limit
         
-        self.curr_clf_id = 0
-        self.switch_count = 0
+        self.curr_clf_id = 0 # zaczynamy od najgłupszego
+        self.switch_count = 0 # licznik
             
         
     def partial_fit(self, X, y, classes):
         for clf in self.clfs:
             for e in range(self.max_training_epochs):
                 try:
-                    mean_proba = np.mean(np.max(clf.predict_proba(X), axis=1))
+                    mean_proba = np.mean(np.max(clf.predict_proba(X), axis=1)) # średnie wsparcie decyzyjne
                     if mean_proba>self.training_support_level:
                         break
                     clf.partial_fit(X,y) 
@@ -35,7 +35,7 @@ class DDoS:
         
         # Check certainty
         proba = self.clfs[self.curr_clf_id].predict_proba(X)
-        mean_support = np.mean(np.max(proba, axis=1))
+        mean_support = np.mean(np.max(proba, axis=1)) # średnie wsparcie decyzyjne
         
         _curr_clf_id = np.argwhere(self.thresholds>mean_support).flatten()[-1]
         if _curr_clf_id != self.curr_clf_id:

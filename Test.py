@@ -7,7 +7,7 @@ import torchvision
 from torchvision.transforms import Compose, ToTensor
 from ConditionalEvidenceStream import ConditionalEvidenceStream
 from utils import make_condition_map, mix_to_factor
-from Method import DDoS
+from Method import CDoS
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 from tqdm import tqdm
@@ -57,7 +57,7 @@ clfs = [
 ]
 thresholds = [0.9, 0.85, 0.8, 0.75, 0.7]
 
-ddos = DDoS(clfs=clfs,
+ddos = CDoS(clfs=clfs,
            thresholds=thresholds,
            max_training_epochs=250,
            training_support_level=0.8)
