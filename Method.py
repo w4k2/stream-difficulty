@@ -85,10 +85,14 @@ class CDoS_T:
                     self._firstchunk = False
                 else:
                     X = X.to(torch.float)
-                    proba = nn.Softmax(dim=1)(clf(X))
+                    # print(X)
+                    aa = clf(X)
+                    # print(aa)
+                    proba = nn.Softmax(dim=1)(aa)
+                    # print(proba)
                     max_proba = torch.max(proba, dim=1)[0] 
                     mean_proba = torch.mean(max_proba).detach().numpy() # średnie wsparcie decyzyjne
-                    # print(clf_id, mean_proba)
+                    print(clf_id, e, mean_proba)
                     # exit()
                     if mean_proba>self.training_support_level:
                         break

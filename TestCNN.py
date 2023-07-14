@@ -19,17 +19,23 @@ import torch.nn as nn
 n_chunks = 1000
 chunk_size = 200
 
-data = torchvision.datasets.MNIST('./files/', 
-                                  train=True, 
+stream_data = torchvision.datasets.SVHN('./files/', 
+                                  split='train', 
                                   download=True, 
                                   transform = Compose([ToTensor()]))
 
-X = torch.tensor(data.data)
-y = data.targets.numpy()
+train_data = torchvision.datasets.SVHN('./files/', 
+                                  split='test', 
+                                  download=True, 
+                                  transform = Compose([ToTensor()]))
 
-X_pca = PCA(n_components=0.8).fit_transform(X.reshape(60000,-1))
+X = torch.tensor(stream_data.data)/255
+y = stream_data.labels
+
+X_pca = PCA(n_components=0.8).fit_transform(X.reshape(73257,-1))
 X_pca -= np.mean(X_pca, axis=0)
 X_pca /= np.std(X_pca, axis=0)
+print('PCA done')
 
 factor = mix_to_factor(X_pca)
 condition_map = make_condition_map(n_cycles=3,
@@ -48,51 +54,54 @@ stream = ConditionalEvidenceStream(X, y,
                                    chunk_size=chunk_size,
                                    fragile=False)
 
-
+print('Stream done')
 # Prepare parameters and the method
 
 rs = 3423
 clfs = [
-    CNN(architecure=FC_Network()),
-    CNN(architecure=CNN1_5_Network()),
-    CNN(architecure=CNN1_10_Network()),
-    CNN(architecure=CNN2_5_10_Network()),
-    CNN(architecure=CNN2_10_20_Network()),
-    CNN(architecure=CNN3_5_10_20_Network()),  
+    CNN(architecure=FC_Network(img_depth=3, x_input_size=32)),
+    CNN(architecure=CNN1_5_Network(img_depth=3, x_input_size=32)),
+    CNN(architecure=CNN1_10_Network(img_depth=3, x_input_size=32)),
+    CNN(architecure=CNN2_5_10_Network(img_depth=3, x_input_size=32)),
+    CNN(architecure=CNN2_10_20_Network(img_depth=3, x_input_size=32)),
+    CNN(architecure=CNN3_5_10_20_Network(img_depth=3, x_input_size=32)),  
 ]
 thresholds = [1., 0.95, 0.9, 0.85, 0.8, 0.75]
 
 ddos = CDoS_T(clfs=clfs,
            thresholds=thresholds,
            max_training_epochs=250,
-           training_support_level=0.9)
+           training_support_level=0.8)
+
+
+# Train on stationary
+
+train_X = torch.tensor(train_data.data)/255
+train_y = train_data.labels
+ddos.partial_fit(train_X, train_y)
+
 
 # Process
 acc = np.full((len(clfs)+1, n_chunks), np.nan)
 
 for i in tqdm(range(n_chunks)):
     X, y = stream.get_chunk()
-    X = X.reshape(chunk_size, 1, 28, 28)
-    # exit()
-    
-    if i<20:
-        ddos.partial_fit(X, y)
-        
-    else:
-        with torch.no_grad():
-            pred = ddos.predict(X)
-            # print(pred)
-            # exit()
-            acc[-1, i] = accuracy_score(y, pred)
-            for c_id, c in enumerate(ddos.clfs):
-                # Check certainty
-                X = X.to(torch.float)
-                proba = nn.Softmax(dim=1)(c(X))
-                pred = torch.argmax(proba,1)            
-                acc[c_id, i] = accuracy_score(y, pred)
-                
+    print(X.shape)
 
-cols = plt.cm.Reds(np.linspace(0.2,1,7))
+    with torch.no_grad():
+        pred = ddos.predict(X)
+        # print(pred)
+        # exit()
+        acc[-1, i] = accuracy_score(y, pred)
+        for c_id, c in enumerate(ddos.clfs):
+            # Check certainty
+            X = X.to(torch.float)
+            proba = nn.Softmax(dim=1)(c(X))
+            pred = torch.argmax(proba,1)            
+            acc[c_id, i] = accuracy_score(y, pred)
+            
+
+cols = plt.cm.jet(np.linspace(0.2,1,7))
 
 s=3
 fig, ax = plt.subplots(1,1,figsize=(12,8))

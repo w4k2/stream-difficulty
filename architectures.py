@@ -6,7 +6,7 @@ class CNN(nn.Module):
     def __init__(self, architecure, n_classes=10):
         super(CNN, self).__init__()
         self.architecure = architecure
-        self.n_classes  = n_classes
+        self.n_classes = n_classes
         
     def forward(self, X):
         representation = self.architecure(X)              
