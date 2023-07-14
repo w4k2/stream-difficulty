@@ -32,7 +32,7 @@ class ConditionalEvidenceStream():
         if self.chunk_idx >= self.n_chunks:
             return None
         
-        concept_probability = self.concept_proba[self.chunk_idx]
+        # concept_probability = self.concept_proba[self.chunk_idx]
         counts = self.evidence[self.chunk_idx]
         
         # Identify concepts with necessary samples
