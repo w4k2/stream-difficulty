@@ -57,52 +57,13 @@ class CDoS:
 
 
 class CDoS_T:
-    def __init__(self, clfs, thresholds, max_training_epochs, training_support_level, switch_when=10):
+    def __init__(self, clfs, thresholds, switch_when=10):
         self.clfs = clfs # lista klasyfikatorów
         self.thresholds = thresholds # lista progów (tej samej długości co lista klasyfiaktorów) i najwyższy próg musi nie być przekraczalny bo się wysypie
         self.switch_when = switch_when # ile pod rząd musi przekroczyć próg
-        
-        self.training_support_level = training_support_level # do tej wartości wsparcia uczone są wszystkie klasyfikatory
-        self.max_training_epochs = max_training_epochs # ale jest limit
-        
+                
         self.curr_clf_id = 0 # zaczynamy od najgłupszego
         self.switch_count = 0 # licznik
-        
-        self._firstchunk = True
-            
-        
-    def partial_fit(self, X, y):
-        dataset = TensorDataset(torch.Tensor(X),torch.Tensor(y))
-        dataloader = DataLoader(dataset, batch_size=64)
-        loss_fn = torch.nn.CrossEntropyLoss()
-        
-        for clf_id, clf in enumerate(self.clfs):
-            optimizer = torch.optim.SGD(clf.parameters(), lr=1e-2)
-
-            for e in range(self.max_training_epochs):
-                if self._firstchunk:
-                    clf.train(dataloader, loss_fn, optimizer)
-                    self._firstchunk = False
-                else:
-                    X = X.to(torch.float)
-                    # print(X)
-                    aa = clf(X)
-                    # print(aa)
-                    proba = nn.Softmax(dim=1)(aa)
-                    # print(proba)
-                    max_proba = torch.max(proba, dim=1)[0] 
-                    mean_proba = torch.mean(max_proba).detach().numpy() # średnie wsparcie decyzyjne
-                    print(clf_id, e, mean_proba)
-                    # exit()
-                    if mean_proba>self.training_support_level:
-                        break
-                    
-                    # train
-                    clf.train(dataloader, loss_fn, optimizer)
- 
-                    
-                    
-        return self
 
     def predict(self, X):
         
