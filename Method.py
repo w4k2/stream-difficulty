@@ -62,7 +62,7 @@ class CDoS_T:
         self.thresholds = thresholds # lista progów (tej samej długości co lista klasyfiaktorów) i najwyższy próg musi nie być przekraczalny bo się wysypie
         self.switch_when = switch_when # ile pod rząd musi przekroczyć próg
                 
-        self.curr_clf_id = 0 # zaczynamy od najgłupszego
+        self.curr_clf_id = int(len(self.clfs)/2) # zaczynamy od średniego
         self.switch_count = 0 # licznik
 
     def predict(self, X):

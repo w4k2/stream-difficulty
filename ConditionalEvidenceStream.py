@@ -6,7 +6,8 @@ class ConditionalEvidenceStream():
                  condition_map, 
                  concept_proba,
                  chunk_size,
-                 fragile=False):
+                 fragile=False,
+                 random_state=None):
         self.X = X
         self.y = y
         self.n_samples = X.shape[0]
@@ -27,7 +28,8 @@ class ConditionalEvidenceStream():
         self.chunk_idx = 0
         
         self.usage = np.zeros_like(self.idx)
-        
+        np.random.seed(random_state)
+                
     def get_chunk(self):
         if self.chunk_idx >= self.n_chunks:
             return None
