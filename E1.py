@@ -86,6 +86,7 @@ times = np.zeros((repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks,
 cdos_selected = np.zeros((repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
 
 r_states = np.random.choice(100000, repeats, replace=False)
+print(r_states)
 
 for cs_id, cs in enumerate(chunk_size):
     thresholds = get_th(chunk_size=cs)
@@ -109,7 +110,8 @@ for cs_id, cs in enumerate(chunk_size):
                                                 condition_map.T,
                                                 cp,
                                                 chunk_size=cs,
-                                                fragile=False)
+                                                fragile=False,
+                                                random_state=rs)
                 
                 
 
