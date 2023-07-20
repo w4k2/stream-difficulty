@@ -47,7 +47,8 @@ for c_id, c in enumerate(chunk_size):
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c='r', alpha=.7)
                 else:
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c=cols[method_id], alpha=0.5)
-                        
+    
+    plt.tight_layout()            
     plt.savefig('fig/m_acc_cs%i.png' % c)
 
 # Time
@@ -70,7 +71,8 @@ for c_id, c in enumerate(chunk_size):
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c='r', alpha=.7)
                 else:
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c=cols[method_id], alpha=0.5)
-                        
+    
+    plt.tight_layout()                          
     plt.savefig('fig/m_time_cs%i.png' % c)
     
     
@@ -89,6 +91,7 @@ for c_id, c in enumerate(chunk_size):
             temp = sel_m[c_id, n_c_id, mode_id]
             ax[n_c_id, mode_id].scatter(np.arange(n_chunks), temp, c='blue', alpha=0.5)
 
+    plt.tight_layout()            
     plt.savefig('fig/m_sel_cs%i.png' % c)
 
 
@@ -127,7 +130,8 @@ for c_id, c in enumerate(chunk_size):
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c='r', alpha=.7)
                 else:
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c=cols[method_id], alpha=0.5)
-                        
+    
+    plt.tight_layout()                             
     plt.savefig('fig/acc_cs%i.png' % c)
 
 # Time
@@ -150,7 +154,8 @@ for c_id, c in enumerate(chunk_size):
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c='r', alpha=.7)
                 else:
                     ax[n_c_id, mode_id].plot(gaussian_filter1d(temp, s), c=cols[method_id], alpha=0.5)
-                        
+    
+    plt.tight_layout()                               
     plt.savefig('fig/time_cs%i.png' % c)
     
     
@@ -168,5 +173,6 @@ for c_id, c in enumerate(chunk_size):
 
             temp = sel_m[c_id, n_c_id, mode_id]
             ax[n_c_id, mode_id].scatter(np.arange(n_chunks), temp, c='blue', alpha=0.5)
-
+    
+    plt.tight_layout()            
     plt.savefig('fig/sel_cs%i.png' % c)
