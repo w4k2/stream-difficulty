@@ -13,7 +13,10 @@ from sklearn.metrics import accuracy_score
 from Method import CDoS_T
 from tqdm import tqdm
 
-def get_th(chunk_size):
+def get_th(chunk_size, alpha=0.92):
+    # alpha -- na ile trudniejszy będzie zbiór testowy niż treningowy 
+    # -- rozciągnięcie th 
+    # -- jak większe alpha to mniej rozrzuca
     max_probas=[]
     for c in clfs:
         proba = nn.Softmax(dim=1)(c(train_X))
@@ -32,12 +35,15 @@ def get_th(chunk_size):
     th = []
     argsort_mp = np.argsort(mp)
 
-    for b in range(n_bins-1):
+    for b in range(1,n_bins):
         th.append(mp[argsort_mp[b*bin_size]])
 
+
     th.reverse()
+    th = np.array(th)*np.linspace(1,alpha,len(th))
+
     th[0]=1.
-    
+        
     return th
 
 # Prepare trainig data

@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 from scipy.ndimage import gaussian_filter1d
 
 # Setup
@@ -28,7 +27,7 @@ sel_m = np.mean(sel, axis=0)
 
 
 # Accuracy
-s = 5
+s = 3
 cols = plt.cm.Blues(np.linspace(0.3,0.9,6))
 
 for c_id, c in enumerate(chunk_size):
@@ -52,8 +51,6 @@ for c_id, c in enumerate(chunk_size):
     plt.savefig('fig/m_acc_cs%i.png' % c)
 
 # Time
-s = 5
-cols = plt.cm.Blues(np.linspace(0.3,0.9,6))
 
 for c_id, c in enumerate(chunk_size):
     fig, ax = plt.subplots(4,3, figsize=(18,10), sharex=True, sharey=True)
@@ -111,8 +108,6 @@ sel_m = np.mean(sel, axis=0)
 
 
 # Accuracy
-s = 5
-cols = plt.cm.Blues(np.linspace(0.3,0.9,6))
 
 for c_id, c in enumerate(chunk_size):
     fig, ax = plt.subplots(4,3, figsize=(18,10), sharex=True, sharey=True)
@@ -135,8 +130,6 @@ for c_id, c in enumerate(chunk_size):
     plt.savefig('fig/acc_cs%i.png' % c)
 
 # Time
-s = 5
-cols = plt.cm.Blues(np.linspace(0.3,0.9,6))
 
 for c_id, c in enumerate(chunk_size):
     fig, ax = plt.subplots(4,3, figsize=(18,10), sharex=True, sharey=True)
