@@ -10,24 +10,24 @@ from sklearn.metrics import accuracy_score
 
 archs = [
     # FC
-    FC1_Network(x_input_size=32, img_depth=3),
-    FC2_Network(x_input_size=32, img_depth=3),
-    FC3_Network(x_input_size=32, img_depth=3),
-    FC4_Network(x_input_size=32, img_depth=3),
+    FC1_Network,
+    FC2_Network,
+    FC3_Network,
+    FC4_Network,
     # CNN1
-    CNN1_5_Network(x_input_size=32, img_depth=3),
-    CNN1_10_Network(x_input_size=32, img_depth=3),
-    CNN1_15_Network(x_input_size=32, img_depth=3),
-    CNN1_20_Network(x_input_size=32, img_depth=3),
+    CNN1_5_Network,
+    CNN1_10_Network,
+    CNN1_15_Network,
+    CNN1_20_Network,
     # CNN2
-    CNN2_5_10_Network(x_input_size=32, img_depth=3),
-    CNN2_10_15_Network(x_input_size=32, img_depth=3),
-    CNN2_15_20_Network(x_input_size=32, img_depth=3),
-    CNN2_20_30_Network(x_input_size=32, img_depth=3),
-    CNN2_25_40_Network(x_input_size=32, img_depth=3),
+    CNN2_5_10_Network,
+    CNN2_10_15_Network,
+    CNN2_15_20_Network,
+    CNN2_20_30_Network,
+    CNN2_25_40_Network,
     # CNN3
-    CNN3_5_10_20_Network(x_input_size=32, img_depth=3),
-    CNN3_10_20_30_Network(x_input_size=32, img_depth=3)
+    CNN3_5_10_20_Network,
+    CNN3_10_20_30_Network
 ]
 
 results = np.full((len(archs), 10, 3), np.nan) # acc, time, support
@@ -55,7 +55,7 @@ for fold, (train, test) in enumerate(skf.split(np.zeros(len(y)), y)):
     
     for a_id, a in enumerate(archs):
         
-        clf = CNN(architecure=a)
+        clf = CNN(architecure=a(x_input_size=32, img_depth=3))
         loss_fn = torch.nn.CrossEntropyLoss()
         optimizer = torch.optim.SGD(clf.parameters(), lr=1e-2)
 
