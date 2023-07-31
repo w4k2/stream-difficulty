@@ -12,39 +12,9 @@ import time
 from sklearn.metrics import accuracy_score
 from Method import CDoS_T
 from tqdm import tqdm
+from utils import get_th
 
-def get_th(chunk_size, alpha=0.92):
-    # alpha -- na ile trudniejszy będzie zbiór testowy niż treningowy 
-    # -- rozciągnięcie th 
-    # -- jak większe alpha to mniej rozrzuca
-    max_probas=[]
-    for c in clfs:
-        proba = nn.Softmax(dim=1)(c(train_X))
-        max_proba = torch.max(proba, dim=1)[0]
-        max_probas.append(max_proba.detach().numpy())
-        
-    mp = np.array(max_probas).flatten()
-    aa = int(len(mp)/chunk_size)
-    mp = mp[:aa*chunk_size]
-    mp = mp.reshape(aa,chunk_size)
-    mp = np.mean(mp, axis=1)
-
-    n_bins=7
-    bin_size = int(len(mp)/n_bins)
-
-    th = []
-    argsort_mp = np.argsort(mp)
-
-    for b in range(1,n_bins):
-        th.append(mp[argsort_mp[b*bin_size]])
-
-
-    th.reverse()
-    th = np.array(th)*np.linspace(1,alpha,len(th))
-
-    th[0]=1.
-        
-    return th
+np.random.seed(1223)
 
 # Prepare trainig data
 train_data = torchvision.datasets.SVHN('./files/', 
@@ -95,7 +65,7 @@ r_states = np.random.choice(100000, repeats, replace=False)
 print(r_states)
 
 for cs_id, cs in enumerate(chunk_size):
-    thresholds = get_th(chunk_size=cs)
+    thresholds = get_th(clfs, train_X, chunk_size=cs, alpha=0.92)
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         

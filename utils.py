@@ -1,6 +1,8 @@
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import quantile_transform
 import numpy as np
+import torch
+import torch.nn as nn
 
 # Maska co najmniej
 def make_condition_map(n_cycles, n_concepts, factor, factor_range):
@@ -40,3 +42,37 @@ def mix_to_factor(X, n_components=10, covtype='spherical'):
     
     return factor
     
+    
+
+def get_th(clfs, train_X, chunk_size, alpha=0.92):
+    # alpha -- na ile trudniejszy będzie zbiór testowy niż treningowy 
+    # -- rozciągnięcie th 
+    # -- jak większe alpha to mniej rozrzuca
+    max_probas=[]
+    for c in clfs:
+        proba = nn.Softmax(dim=1)(c(train_X))
+        max_proba = torch.max(proba, dim=1)[0]
+        max_probas.append(max_proba.detach().numpy())
+        
+    mp = np.array(max_probas).flatten()
+    aa = int(len(mp)/chunk_size)
+    mp = mp[:aa*chunk_size]
+    mp = mp.reshape(aa,chunk_size)
+    mp = np.mean(mp, axis=1)
+
+    n_bins=len(clfs)+1
+    bin_size = int(len(mp)/n_bins)
+
+    th = []
+    argsort_mp = np.argsort(mp)
+
+    for b in range(1,n_bins):
+        th.append(mp[argsort_mp[b*bin_size]])
+
+
+    th.reverse()
+    th = np.array(th)*np.linspace(1,alpha,len(th))
+
+    th[0]=1.
+        
+    return th

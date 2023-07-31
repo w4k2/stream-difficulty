@@ -12,40 +12,16 @@ import time
 from sklearn.metrics import accuracy_score
 from Method import CDoS_T
 from tqdm import tqdm
+from utils import get_th
 
-def get_th(chunk_size):
-    max_probas=[]
-    for c in clfs:
-        proba = nn.Softmax(dim=1)(c(train_X))
-        max_proba = torch.max(proba, dim=1)[0]
-        max_probas.append(max_proba.detach().numpy())
-        
-    mp = np.array(max_probas).flatten()
-    aa = int(len(mp)/chunk_size)
-    mp = mp[:aa*chunk_size]
-    mp = mp.reshape(aa,chunk_size)
-    mp = np.mean(mp, axis=1)
-
-    n_bins=7
-    bin_size = int(len(mp)/n_bins)
-
-    th = []
-    argsort_mp = np.argsort(mp)
-
-    for b in range(n_bins-1):
-        th.append(mp[argsort_mp[b*bin_size]])
-
-    th.reverse()
-    th[0]=1.
-    
-    return th
+np.random.seed(1223)
 
 # Prepare trainig data
 train_data = torchvision.datasets.MNIST('./files/', 
                                   train=False, #Tak.
                                   download=True)
 
-train_X = (torch.tensor(train_data.data)/255).to(torch.float)
+train_X = (train_data.data/255).to(torch.float)
 train_X = train_X.reshape(train_X.shape[0], 1, train_X.shape[1], train_X.shape[2])
 
 
@@ -54,7 +30,7 @@ stream_data = torchvision.datasets.MNIST('./files/',
                                   train=True,
                                   download=True)
 
-X = torch.tensor(stream_data.data)/255
+X = stream_data.data/255
 X = X.reshape(X.shape[0], 1, X.shape[1], X.shape[2])
 y = stream_data.targets
 
@@ -66,7 +42,7 @@ factor = mix_to_factor(X_pca)
 
 #Load trained classifiers
 clfs=[]
-for c_id in range(6):
+for c_id in range(5):
     clfs.append(torch.load('models/mn_%i.pt' % c_id))
     
     
@@ -90,7 +66,7 @@ cdos_selected = np.zeros((repeats, len(chunk_size), len(n_cycles), len(modes), n
 r_states = np.random.choice(100000, repeats, replace=False)
 
 for cs_id, cs in enumerate(chunk_size):
-    thresholds = get_th(chunk_size=cs)
+    thresholds = get_th(clfs, train_X, chunk_size=cs, alpha=0.97)
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         
@@ -111,9 +87,8 @@ for cs_id, cs in enumerate(chunk_size):
                                                 condition_map.T,
                                                 cp,
                                                 chunk_size=cs,
-                                                fragile=False)
-                
-                
+                                                fragile=False, 
+                                                random_state=rs)
 
                 # Prepare method
                 cdos = CDoS_T(clfs=clfs, thresholds=thresholds)
