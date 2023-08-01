@@ -65,7 +65,8 @@ r_states = np.random.choice(100000, repeats, replace=False)
 print(r_states)
 
 for cs_id, cs in enumerate(chunk_size):
-    thresholds = get_th(clfs, train_X, chunk_size=cs, alpha=0.92)
+    thresholds = [1., 0.83, 0.82, 0.81, 0.8, 0.77]
+    #get_th(clfs, train_X, chunk_size=cs, alpha=0.85)
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         
