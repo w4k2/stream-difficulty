@@ -136,10 +136,11 @@ for mode_id, mode in enumerate(modes):
                 ax[n_c_id, c_id].set_ylabel('cycles:%i \naccuracy' % n_c, fontsize=12)
                 
             ax[n_c_id, c_id].grid(ls=':')
-            for method_id in range(7):
+            for method_id in range(6):
                 temp = accs_m[c_id, n_c_id, mode_id, :, method_id]
 
-                if method_id==6:
+                if method_id==5:
+                    temp = accs_m[c_id, n_c_id, mode_id, :, -1]
                     ax[n_c_id, c_id].plot(gaussian_filter1d(temp, s), c='r', alpha=.7)
                 else:
                     ax[n_c_id, c_id].plot(gaussian_filter1d(temp, s), c=cols[method_id], alpha=0.5)
@@ -162,10 +163,11 @@ for mode_id, mode in enumerate(modes):
                 ax[n_c_id, c_id].set_ylabel('cycles:%i \ntime' % n_c, fontsize=12)
                 
             ax[n_c_id, c_id].grid(ls=':')
-            for method_id in range(7):
+            for method_id in range(6):
                 temp = times_m[c_id, n_c_id, mode_id, :, method_id]
 
-                if method_id==6:
+                if method_id==5:
+                    temp = times_m[c_id, n_c_id, mode_id, :, -1]
                     ax[n_c_id, c_id].plot(gaussian_filter1d(temp, s), c='r', alpha=.7)
                 else:
                     ax[n_c_id, c_id].plot(gaussian_filter1d(temp, s), c=cols[method_id], alpha=0.5)
