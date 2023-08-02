@@ -58,7 +58,7 @@ for mode_id, mode in enumerate(modes):
 # Time
 
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=True)
+    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=False)
     plt.suptitle('MNIST | mode: %s' % mode)
 
     for n_c_id, n_c in enumerate(n_cycles):
@@ -151,7 +151,7 @@ for mode_id, mode in enumerate(modes):
 # Time
 
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=True)
+    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=False)
     plt.suptitle('SVHN | mode: %s' % mode)
 
     for n_c_id, n_c in enumerate(n_cycles):
