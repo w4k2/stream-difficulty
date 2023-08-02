@@ -40,12 +40,12 @@ factor = mix_to_factor(X_pca)
 
 #Load trained classifiers
 clfs=[]
-for c_id in range(6):
+for c_id in range(5):
     clfs.append(torch.load('models/%i.pt' % c_id))
     
     
 # Experimental setup
-repeats = 10
+repeats = 5
 n_chunks = 1000
 chunk_size = [50, 150, 300, 500]
 n_cycles = [3, 5, 10, 25]
@@ -65,8 +65,10 @@ r_states = np.random.choice(100000, repeats, replace=False)
 print(r_states)
 
 for cs_id, cs in enumerate(chunk_size):
-    thresholds = [1., 0.83, 0.82, 0.81, 0.8, 0.77]
-    #get_th(clfs, train_X, chunk_size=cs, alpha=0.85)
+    thresholds = [1., 0.81, 0.80, 0.79, 0.78]
+    #get_th(clfs, train_X, chunk_size=cs, alpha=0.91)
+    #
+    #[1., 0.83, 0.82, 0.81, 0.8, 0.77]
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         
