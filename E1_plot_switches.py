@@ -9,9 +9,9 @@ sel = np.load('results/e1_selected_m.npy')
 print(sel.shape)
 # (repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
 
-counts = np.zeros((10,4,4,3))
+counts = np.zeros((5,4,4,3))
 
-for rep in range(10):
+for rep in range(5):
     for ch_s in range(4):
         for n_c in range(4):
             for m in range(3):
@@ -21,10 +21,12 @@ for rep in range(10):
 
 m_counts = np.mean(counts, axis=0)
 
-fig, ax = plt.subplots(1,3,figsize=(12,4))
+fig, ax = plt.subplots(1,3,figsize=(12,5))
 plt.suptitle('MNIST | #switches')
 for m_id, m in enumerate(['instant', 'linear', 'normal']):
-    aa = np.flipud(m_counts[:,:,m_id])
+    print('3 cycles', m_counts[:,0,m_id])
+
+    aa = m_counts[:,:,m_id].T
     ax[m_id].imshow(aa, cmap='coolwarm')
     
     ax[m_id].set_xticks(np.arange(4), chunk_size)
@@ -60,10 +62,12 @@ for rep in range(5):
 
 m_counts = np.mean(counts, axis=0)
 
-fig, ax = plt.subplots(1,3,figsize=(12,4))
+fig, ax = plt.subplots(1,3,figsize=(12,5))
 plt.suptitle('SVHN | #switches')
 for m_id, m in enumerate(['instant', 'linear', 'normal']):
-    aa = np.flipud(m_counts[:,:,m_id])
+    print('5 cycles', m_counts[:,1,m_id])
+    aa = m_counts[:,:,m_id].T
+    
     ax[m_id].imshow(aa, cmap='coolwarm')
     
     ax[m_id].set_xticks(np.arange(4), chunk_size)

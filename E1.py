@@ -12,17 +12,8 @@ import time
 from sklearn.metrics import accuracy_score
 from Method import CDoS_T
 from tqdm import tqdm
-from utils import get_th
 
 np.random.seed(1223)
-
-# Prepare trainig data
-train_data = torchvision.datasets.SVHN('./files/', 
-                                  split='test', #Tak.
-                                  download=True)
-
-train_X = (torch.tensor(train_data.data)/255).to(torch.float)
-
 
 # Prepare stream data
 stream_data = torchvision.datasets.SVHN('./files/', 
@@ -66,9 +57,6 @@ print(r_states)
 
 for cs_id, cs in enumerate(chunk_size):
     thresholds = [1., 0.81, 0.80, 0.79, 0.78]
-    #get_th(clfs, train_X, chunk_size=cs, alpha=0.91)
-    #
-    #[1., 0.83, 0.82, 0.81, 0.8, 0.77]
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         
@@ -91,9 +79,6 @@ for cs_id, cs in enumerate(chunk_size):
                                                 chunk_size=cs,
                                                 fragile=False,
                                                 random_state=rs)
-                
-                
-
                 # Prepare method
                 cdos = CDoS_T(clfs=clfs, thresholds=thresholds)
 

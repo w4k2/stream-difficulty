@@ -86,6 +86,8 @@ class CDoS_T:
                     self.curr_clf_id-=1
             else:
                 self.switch_count+=1
+        else:
+            self.switch_count = 0
                 
         return torch.argmax(proba, dim=1)
     

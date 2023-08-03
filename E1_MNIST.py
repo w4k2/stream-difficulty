@@ -12,18 +12,8 @@ import time
 from sklearn.metrics import accuracy_score
 from Method import CDoS_T
 from tqdm import tqdm
-from utils import get_th
 
 np.random.seed(1223)
-
-# Prepare trainig data
-train_data = torchvision.datasets.MNIST('./files/', 
-                                  train=False, #Tak.
-                                  download=True)
-
-train_X = (train_data.data/255).to(torch.float)
-train_X = train_X.reshape(train_X.shape[0], 1, train_X.shape[1], train_X.shape[2])
-
 
 # Prepare stream data
 stream_data = torchvision.datasets.MNIST('./files/', 
@@ -47,7 +37,7 @@ for c_id in range(5):
     
     
 # Experimental setup
-repeats = 10
+repeats = 5
 n_chunks = 1000
 chunk_size = [50, 150, 300, 500]
 n_cycles = [3, 5, 10, 25]
@@ -66,7 +56,7 @@ cdos_selected = np.zeros((repeats, len(chunk_size), len(n_cycles), len(modes), n
 r_states = np.random.choice(100000, repeats, replace=False)
 
 for cs_id, cs in enumerate(chunk_size):
-    thresholds = get_th(clfs, train_X, chunk_size=cs, alpha=0.97)
+    thresholds = [1., 0.94, 0.93, 0.92, 0.91]
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         
