@@ -56,7 +56,7 @@ r_states = np.random.choice(100000, repeats, replace=False)
 print(r_states)
 
 for cs_id, cs in enumerate(chunk_size):
-    thresholds = [1., 0.81, 0.80, 0.79, 0.78]
+    thresholds = [1., 0.85, 0.8475, 0.845, 0.8425]
     print(thresholds)
     for r_id, rs in enumerate(r_states):
         
