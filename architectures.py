@@ -12,7 +12,7 @@ class CNN(nn.Module):
         representation = self.architecure(X)              
         return representation
     
-    def train(self, dataloader, loss_fn, optimizer):        
+    def custom_train(self, dataloader, loss_fn, optimizer):        
         for i, (X, y) in enumerate(dataloader):
             y = y.to(torch.int64)
             onehot_y = torch.nn.functional.one_hot(y, self.n_classes)
