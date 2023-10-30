@@ -9,6 +9,7 @@ import time
 from sklearn.metrics import accuracy_score
 
 torch.manual_seed(5531)
+torch.set_num_threads(1)
 
 archs = [
     # FC
