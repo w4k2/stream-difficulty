@@ -62,7 +62,7 @@ for fold, (train, test) in enumerate(skf.split(np.zeros(len(y)), y)):
         # TRAINING
         for e in range(max_training_epochs):
             if e==0:
-                clf.train(dataloader, loss_fn, optimizer)
+                clf.custom_train(dataloader, loss_fn, optimizer)
             else:
 
                 proba = nn.Softmax(dim=1)(clf(X[train]))
@@ -75,7 +75,7 @@ for fold, (train, test) in enumerate(skf.split(np.zeros(len(y)), y)):
                 if mean_proba>training_support_level:
                     break
                 
-                clf.train(dataloader, loss_fn, optimizer)
+                clf.custom_train(dataloader, loss_fn, optimizer)
             
         # TESTING
         st = time.time()

@@ -25,24 +25,33 @@ class CNN(nn.Module):
             loss.backward()
             optimizer.step()
 
-def FC1_Network(x_input_size=28, img_depth=1, n_classes=10):         
+def FC1_Network(x_input_size=28, img_depth=1, n_classes=10):   
+    size = int(((x_input_size/2)/2)**2)*img_depth
     return nn.Sequential(
+        nn.MaxPool2d(2),
+        nn.MaxPool2d(2),
         nn.Flatten(),
-        nn.Linear(img_depth*x_input_size*x_input_size, n_classes),
-        ) 
+        nn.Linear(size, n_classes),
+        )
 
-def FC2_Network(x_input_size=28, img_depth=1, n_classes=10):         
+def FC2_Network(x_input_size=28, img_depth=1, n_classes=10):
+    size = int(((x_input_size/2)/2)**2)*img_depth
     return nn.Sequential(
+        nn.MaxPool2d(2),
+        nn.MaxPool2d(2),
         nn.Flatten(),
-        nn.Linear(img_depth*x_input_size*x_input_size, 1000),
+        nn.Linear(size, 1000),
         nn.ReLU(),
         nn.Linear(1000, n_classes),
         )
     
 def FC3_Network(x_input_size=28, img_depth=1, n_classes=10):         
+    size = int(((x_input_size/2)/2)**2)*img_depth
     return nn.Sequential(
+        nn.MaxPool2d(2),
+        nn.MaxPool2d(2),
         nn.Flatten(),
-        nn.Linear(img_depth*x_input_size*x_input_size, 1000),
+        nn.Linear(size, 1000),
         nn.ReLU(),
         nn.Linear(1000, 100),
         nn.ReLU(),
@@ -50,9 +59,12 @@ def FC3_Network(x_input_size=28, img_depth=1, n_classes=10):
         )
 
 def FC4_Network(x_input_size=28, img_depth=1, n_classes=10):         
+    size = int(((x_input_size/2)/2)**2)*img_depth
     return nn.Sequential(
+        nn.MaxPool2d(2),
+        nn.MaxPool2d(2),
         nn.Flatten(),
-        nn.Linear(img_depth*x_input_size*x_input_size, 1000),
+        nn.Linear(size, 1000),
         nn.ReLU(),
         nn.Linear(1000, 500),
         nn.ReLU(),
