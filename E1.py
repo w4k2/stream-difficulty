@@ -14,6 +14,7 @@ from Method import CDoS_T
 from tqdm import tqdm
 
 np.random.seed(1223)
+torch.manual_seed(15553)
 
 # Prepare stream data
 stream_data = torchvision.datasets.SVHN('./files/', 
@@ -32,7 +33,7 @@ factor = mix_to_factor(X_pca)
 #Load trained classifiers
 clfs=[]
 for c_id in range(5):
-    clfs.append(torch.load('models/%i.pt' % c_id))
+    clfs.append(torch.load('models_fixed/%i.pt' % c_id))
     
     
 # Experimental setup
