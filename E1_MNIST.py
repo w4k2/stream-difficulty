@@ -15,6 +15,7 @@ from tqdm import tqdm
 
 np.random.seed(1223)
 torch.manual_seed(15553)
+torch.set_num_threads(1)
 
 # Prepare stream data
 stream_data = torchvision.datasets.MNIST('./files/', 
