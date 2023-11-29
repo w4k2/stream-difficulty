@@ -54,8 +54,12 @@ for m_id, m in enumerate(modes.keys()):
             cdos_letency = np.mean(latencies[sel_temp.astype(int)])
             cdos_macc = np.mean(np.array(maccs)[sel_temp.astype(int)])
             
-            ttag = ( (cdos_letency-r_latency)/1e-2*(cdos_macc-r_macc)/1e7)/(np.abs(cdos_acc-r_acc)*1e3)
-
+            # Time to accuracy gain
+            rel_latency_loss = np.abs((cdos_letency-r_latency)/r_latency)
+            rel_macc_loss = np.abs((cdos_macc-r_macc)/r_macc)
+            rel_acc_loss = np.abs((cdos_acc-r_acc)/r_acc)
+            ttag = (rel_macc_loss*rel_latency_loss)/rel_acc_loss
+            
             r = [ str_name, 
                  '%0.3f' % r_acc, 
                  '%0.3f (%0.3f)' % (cdos_acc, cdos_acc-r_acc), 
