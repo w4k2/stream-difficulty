@@ -1,0 +1,69 @@
+import numpy as np
+from tabulate import tabulate
+
+# MNIST
+# mn_0_quant.tflite - acc - MACC: 83175 - Flash: 30765 B - RAM: 4144 B - Latency: 10.821 ms
+# mn_1_quant.tflite - acc - MACC: 166340 - Flash: 38138 B - RAM: 6304 B - Latency: 15.230 ms
+# mn_2_quant.tflite - acc - MACC: 394955 - Flash: 36009 B - RAM: 10800 B - Latency: 25.240 ms
+# mn_3_quant.tflite - acc - MACC: 332670 - Flash: 52884 B - RAM: 10624 B - Latency: 25.031 ms
+# mn_4_quant.tflite - acc - MACC: 1987995 - Flash: 61997 B - RAM: 15308 B - Latency: 83.646 ms
+
+
+#(repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
+sel = np.load('results/e1_selected_m.npy')
+_accs = np.load('results/e1_accs_m.npy')
+accs = np.mean(_accs, axis=(0,1,2,3,4))[[0,1,2,3,4]]
+
+maccs = [83175, 166340, 394955, 332670, 1987995]
+flashes = [30765, 38138, 36009, 52884, 61997]
+rams = [4144, 6304, 10800, 10624, 15308]
+latencies = np.array([10.821, 15.230, 25.240, 25.031, 83.646])
+
+###
+chunk_size = [50, 150, 300, 500]
+n_cycles = [3, 5, 10, 25]
+modes = {
+    'instant': {'mode': 'instant'},
+    'linear': {'mode': 'linear'},
+    'normal': {'mode': 'normal', 'sigma': 1},
+    }
+
+###
+
+rows = []
+rows.append(['stream', 'R acc', 'CDoS acc', 'CDos latency', 'CDoS macc (*1e6)'])
+
+for m_id, m in enumerate(modes.keys()):
+    for c_s_id, c_s in enumerate(chunk_size):
+        for c_id, c in enumerate(n_cycles):
+            # Name
+            str_name = '%s_cs%i_c%i' % (m, c_s, c)
+            
+            # Reference
+            r_acc = np.mean(_accs[:,c_s_id,c_id,m_id,:,4])
+            r_latency = latencies[4]
+            r_macc = maccs[4]
+            
+            # CDOS
+            sel_temp = sel[:,c_s_id,c_id,m_id]
+            
+            _cdos_acc = _accs[:,c_s_id,c_id,m_id]
+            cdos_acc = []
+            for rep in range(5):
+                for chunk in range(1000):
+                    s = int(sel_temp[rep,chunk])
+                    cdos_acc.append(_cdos_acc[rep,chunk,s])
+            cdos_acc = np.mean(cdos_acc)
+            cdos_letency = np.mean(latencies[sel_temp.astype(int)])
+            cdos_macc = np.mean(np.array(maccs)[sel_temp.astype(int)])
+
+            r = [ str_name, 
+                 '%0.3f' % r_acc, 
+                 '%0.3f (%0.3f)' % (cdos_acc, cdos_acc-r_acc), 
+                 '%0.3f (%0.3f)' % (cdos_letency, cdos_letency-r_latency), 
+                 '%0.3f (%0.3f)' % (cdos_macc/1e6, (cdos_macc-r_macc)/1e6)]
+            rows.append(r)
+            
+with open('tables/mnist.txt', 'w') as f:
+    f.write(tabulate(rows, tablefmt='latex'))
+            
