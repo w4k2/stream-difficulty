@@ -34,3 +34,5 @@ ax.set_ylabel('complexity')
 
 plt.tight_layout()
 plt.savefig('foo.png')
+plt.savefig('fig/mnist/m_complexity.png')
+plt.savefig('fig/mnist/m_complexity.eps')
