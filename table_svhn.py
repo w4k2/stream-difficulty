@@ -1,20 +1,20 @@
 import numpy as np
 from tabulate import tabulate
 
-# MNIST
-# mn_0_quant.tflite - acc - MACC: 83175 - Flash: 30765 B - RAM: 4144 B - Latency: 10.821 ms
-# mn_1_quant.tflite - acc - MACC: 166340 - Flash: 38138 B - RAM: 6304 B - Latency: 15.230 ms
-# mn_2_quant.tflite - acc - MACC: 394955 - Flash: 36009 B - RAM: 10800 B - Latency: 25.240 ms
-# mn_3_quant.tflite - acc - MACC: 332670 - Flash: 52884 B - RAM: 10624 B - Latency: 25.031 ms
-# mn_4_quant.tflite - acc - MACC: 1987995 - Flash: 61997 B - RAM: 15308 B - Latency: 83.646 ms
+# SVHN
+# 0_quant.tflite - acc - MACC: 310741 - Flash: 33786 B - RAM: 8260 B - Latency: 25.012 ms
+# 1_quant.tflite - acc - MACC: 429336 - Flash: 28756 B - RAM: 9016 B - Latency: 29.783 ms
+# 2_quant.tflite - acc - MACC: 980183 - Flash: 38034 B - RAM: 11536 B - Latency: 49.257 ms
+# 3_quant.tflite - acc - MACC: 2708821 - Flash: 54007 B - RAM: 15080 B - Latency: 98.771 ms
+# 4_quant.tflite - acc - MACC: 4011611 - Flash: 67022 B - RAM: 16948 B - Latency: 146.475 ms
 
 
 #(repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
-sel = np.load('results/e1_selected_m.npy')
-_accs = np.load('results/e1_accs_m.npy')
+sel = np.load('results/e1_selected_3.npy')
+_accs = np.load('results/e1_accs_3.npy')
 
-maccs = [83175, 166340, 394955, 332670, 1987995]
-latencies = np.array([10.821, 15.230, 25.240, 25.031, 83.646])
+maccs = [310741, 429336, 980183, 2708821, 4011611]
+latencies = np.array([25.012, 29.783, 49.257, 98.771, 146.475])
 
 ###
 chunk_size = [50, 150, 300, 500]
@@ -61,6 +61,6 @@ for m_id, m in enumerate(modes.keys()):
                  '%0.3f (%0.3f)' % (cdos_macc/1e6, (cdos_macc-r_macc)/1e6)]
             rows.append(r)
             
-with open('tables/mnist.txt', 'w') as f:
+with open('tables/svhn.txt', 'w') as f:
     f.write(tabulate(rows, tablefmt='latex'))
             
