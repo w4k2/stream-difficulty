@@ -25,22 +25,34 @@ labels = [
     'CNN3_10_20_30'
 ]
 
+selected = [
+    'CNN1_5',
+    'CNN2_5_10',
+    'CNN2_10_15',
+    'CNN2_20_30',
+    'CNN2_25_40'
+]
+
 markers= ['o', 'o', 'o', 'X', 'X', 'X', 'X', 'D', 'D', 'D', 'D', 'D', 's', 's']
 
-fig, ax = plt.subplots(1,1, figsize=(7,7))
+fig, ax = plt.subplots(1,1, figsize=(6,6))
 plt.suptitle('SVHN')
 
 cmap = plt.cm.turbo(np.linspace(0,1,len(labels)))
+cmap = plt.cm.turbo(np.linspace(0,1,len(labels)))
+cmap_mono = plt.cm.bone(np.linspace(0,0.8,len(labels)))
 
 for i, l in enumerate(labels):
     c = cmap[i]
-    ax.scatter(res_m[i,0], res_m[i,1], label=l, color=c, marker=markers[i])
+    c_m = cmap_mono[i]
+    ax.scatter(res_m[i,0], res_m[i,1], label=l, color=c if l in selected else c_m, marker=markers[i], s=100 if l in selected else 50)
 ax.set_xlabel('accuracy')
 ax.set_ylabel('inference time')
-
 ax.grid(ls=':')
 
 plt.legend(frameon=False)
 
 plt.tight_layout()
 plt.savefig('foo.png')
+plt.savefig('fig/svhn/nas_svhn.eps')
+plt.savefig('fig/svhn/nas_svhn.png')
