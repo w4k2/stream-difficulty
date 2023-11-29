@@ -9,7 +9,7 @@ print(len(complexities))
 
 measures = ['f1', 'n1']
 
-fig, ax = plt.subplots(1,1,figsize=(12,4))
+fig, ax = plt.subplots(1,1,figsize=(10,4))
 cols = plt.cm.turbo(np.linspace(0.1,0.9,len(measures)))
 s = 2
 

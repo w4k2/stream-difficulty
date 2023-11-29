@@ -54,7 +54,7 @@ cp = concept_proba(n_concepts=500,
 stream = ConditionalEvidenceStream(X, y,
                                 condition_map.T,
                                 cp,
-                                chunk_size=50,
+                                chunk_size=250,
                                 fragile=False,
                                 random_state=1223)
 
@@ -62,7 +62,7 @@ complexities={}
 
 for c in range(1000):
     _X, y = stream.get_chunk()
-    _X = _X.reshape(50, -1)
+    _X = _X.reshape(250, -1)
     
     X = PCA(n_components=10).fit_transform(_X, y)
     y = np.array(y)

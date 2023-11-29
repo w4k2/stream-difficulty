@@ -25,7 +25,7 @@ for m_id, m in enumerate(measures):
     
 ax.grid(ls=':')
 ax.legend(frameon=False)
-ax.set_title('MNIST | chunk size: 50 | cycles: 5')
+ax.set_title('MNIST | chunk size: 250 | cycles: 5')
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 
