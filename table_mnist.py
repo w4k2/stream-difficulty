@@ -28,7 +28,7 @@ modes = {
 ###
 
 rows = []
-rows.append(['stream', 'R acc', 'CDoS acc', 'CDos latency', 'CDoS macc (*1e6)', 'TTAG'])
+rows.append(['stream', 'R acc', 'CDoS acc', 'CDos Latency (*1e3)', 'CDoS MACC(*1e9)', 'TTAG'])
 
 for m_id, m in enumerate(modes.keys()):
     for c_s_id, c_s in enumerate(chunk_size):
@@ -38,8 +38,8 @@ for m_id, m in enumerate(modes.keys()):
             
             # Reference
             r_acc = np.mean(_accs[:,c_s_id,c_id,m_id,:,4])
-            r_latency = latencies[4]
-            r_macc = maccs[4]
+            r_latency = latencies[4]*c_s
+            r_macc = maccs[4]*c_s
             
             # CDOS
             sel_temp = sel[:,c_s_id,c_id,m_id]
@@ -51,8 +51,8 @@ for m_id, m in enumerate(modes.keys()):
                     s = int(sel_temp[rep,chunk])
                     cdos_acc.append(_cdos_acc[rep,chunk,s])
             cdos_acc = np.mean(cdos_acc)
-            cdos_letency = np.mean(latencies[sel_temp.astype(int)])
-            cdos_macc = np.mean(np.array(maccs)[sel_temp.astype(int)])
+            cdos_letency = np.mean(latencies[sel_temp.astype(int)])*c_s
+            cdos_macc = np.mean(np.array(maccs)[sel_temp.astype(int)])*c_s
             
             # Time to accuracy gain
             rel_latency_loss = np.abs((cdos_letency-r_latency)/r_latency)
@@ -63,8 +63,8 @@ for m_id, m in enumerate(modes.keys()):
             r = [ str_name, 
                  '%0.3f' % r_acc, 
                  '%0.3f (%0.3f)' % (cdos_acc, cdos_acc-r_acc), 
-                 '%0.3f (%0.3f)' % (cdos_letency, cdos_letency-r_latency), 
-                 '%0.3f (%0.3f)' % (cdos_macc/1e6, (cdos_macc-r_macc)/1e6),
+                 '%0.3f (%0.3f)' % (cdos_letency/1e3, (cdos_letency-r_latency)/1e3), 
+                 '%0.3f (%0.3f)' % (cdos_macc/1e9, (cdos_macc-r_macc)/1e9),
                  '%0.3f' % ttag]
             rows.append(r)
             
