@@ -30,6 +30,8 @@ modes = {
 rows = []
 rows.append(['stream', 'R acc', 'CDoS acc', 'CDos Latency(*1e3)', 'CDoS MACC(*1e9)', 'TTAG'])
 
+r_t_a = np.zeros((3,4,4,2))
+
 for m_id, m in enumerate(modes.keys()):
     for c_s_id, c_s in enumerate(chunk_size):
         for c_id, c in enumerate(n_cycles):
@@ -59,7 +61,8 @@ for m_id, m in enumerate(modes.keys()):
             rel_macc_loss = (r_macc-cdos_macc)/r_macc
             rel_acc_loss = (r_acc-cdos_acc)/r_acc
             ttag = (rel_macc_loss*rel_latency_loss)/rel_acc_loss
-            
+            print(rel_latency_loss, rel_macc_loss, rel_acc_loss)
+
             r = [ str_name, 
                  '%0.3f' % r_acc, 
                  '%0.3f (%0.3f)' % (cdos_acc, cdos_acc-r_acc), 
@@ -68,6 +71,11 @@ for m_id, m in enumerate(modes.keys()):
                  '%0.3f' % ttag]
             rows.append(r)
             
+            r_t_a[m_id, c_s_id, c_id, 0] = np.sqrt(rel_macc_loss*rel_latency_loss)
+            r_t_a[m_id, c_s_id, c_id, 1] = rel_acc_loss
+            
+            
 with open('tables/svhn.txt', 'w') as f:
     f.write(tabulate(rows, tablefmt='latex'))
-            
+
+np.save('results/r_t_a.npy', r_t_a)
