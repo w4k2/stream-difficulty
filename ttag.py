@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-r_time_loss = np.linspace(0.2,0.95,100)
+r_time_loss = np.linspace(0.3,0.9,100)
 r_acc_loss = np.linspace(0.001,0.035,100)
 
 r_t_a_m = np.load('results/r_t_a_m.npy')
@@ -27,11 +27,11 @@ plt.suptitle('TTAG')
 
 ax.scatter(xx, yy, c = ttag, cmap='coolwarm')
 a = 15
-ax.set_xticks(r_time_loss[::a], ['%0.2f' % t for t in r_time_loss][::a])
+ax.set_xticks(r_time_loss[::a], ['%0.3f' % t for t in r_time_loss][::a])
 ax.set_xlabel('relative time loss')
-ax.set_yticks(r_acc_loss[::a], ['%0.2f' % t for t in r_acc_loss][::a])
+ax.set_yticks(r_acc_loss[::a], ['%0.3f' % t for t in r_acc_loss][::a])
 ax.set_ylabel('relative accuracy loss')
-ax.set_xlim(0.2, 0.95)
+ax.set_xlim(0.3, 0.9)
 ax.set_ylim(0.001, 0.035)
 
 ax.scatter(t_m, a_m, color='red', marker='x', label='mnist')
