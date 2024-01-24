@@ -30,18 +30,21 @@ sel_m = np.mean(sel, axis=0)
 s = 3
 cols = plt.cm.Blues(np.linspace(0.3,0.9,5))
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=True)
-    plt.suptitle('MNIST | mode: %s' % mode)
+    fig, ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    plt.suptitle('MNIST | mode: %s' % mode, fontsize=15)
 
     for n_c_id, n_c in enumerate(n_cycles):
         for c_id, c in enumerate(chunk_size):
 
             if n_c_id==0:
-                ax[n_c_id, c_id].set_title('size:%i' % c)
+                ax[n_c_id, c_id].set_title('size:%i' % c, fontsize=13)
             if c_id==0:
-                ax[n_c_id, c_id].set_ylabel('cycles:%i \naccuracy' % n_c, fontsize=12)
+                ax[n_c_id, c_id].set_ylabel('cycles:%i \naccuracy' % n_c, fontsize=13)
             
             ax[n_c_id, c_id].grid(ls=':')
+            ax[n_c_id, c_id].spines['top'].set_visible(False)
+            ax[n_c_id, c_id].spines['right'].set_visible(False)
+
             for method_id in range(6):
                 temp = accs_m[c_id, n_c_id, mode_id, :, method_id]
 
@@ -58,18 +61,21 @@ for mode_id, mode in enumerate(modes):
 # Time
 
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=False)
+    fig, ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=False)
     plt.suptitle('MNIST | mode: %s' % mode)
 
     for n_c_id, n_c in enumerate(n_cycles):
         for c_id, c in enumerate(chunk_size):
             
             if n_c_id==0:
-                ax[n_c_id, c_id].set_title('size:%i' % c)
+                ax[n_c_id, c_id].set_title('size:%i' % c, fontsize=13)
             if c_id==0:
-                ax[n_c_id, c_id].set_ylabel('cycles:%i \ntime' % n_c, fontsize=12)
+                ax[n_c_id, c_id].set_ylabel('cycles:%i \ntime' % n_c, fontsize=13)
             
             ax[n_c_id, c_id].grid(ls=':')
+            ax[n_c_id, c_id].spines['top'].set_visible(False)
+            ax[n_c_id, c_id].spines['right'].set_visible(False)
+
             for method_id in range(6):
                 temp = times_m[c_id, n_c_id, mode_id, :, method_id]
 
@@ -87,17 +93,19 @@ for mode_id, mode in enumerate(modes):
 # Selection
 
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=True)
+    fig, ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
     plt.suptitle('MNIST | mode: %s' % mode)
     
     for n_c_id, n_c in enumerate(n_cycles):
         for c_id, c in enumerate(chunk_size):
             
             if n_c_id==0:
-                ax[n_c_id, c_id].set_title('size:%i' % c)
+                ax[n_c_id, c_id].set_title('size:%i' % c, fontsize=13)
             if c_id==0:
-                ax[n_c_id, c_id].set_ylabel('cycles:%i \nclf index' % n_c, fontsize=12)
+                ax[n_c_id, c_id].set_ylabel('cycles:%i \nclf index' % n_c, fontsize=13)
             ax[n_c_id, c_id].grid(ls=':')
+            ax[n_c_id, c_id].spines['top'].set_visible(False)
+            ax[n_c_id, c_id].spines['right'].set_visible(False)
 
             temp = sel_m[c_id, n_c_id, mode_id]
             ax[n_c_id, c_id].scatter(np.arange(n_chunks), temp, c='r', alpha=0.25, s=5)

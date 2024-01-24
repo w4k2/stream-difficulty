@@ -35,14 +35,14 @@ res_selected = np.zeros((5, 4, 4, 3, 1000)) #(repeats, len(chunk_size), len(n_cy
 
 for m_id, mode in enumerate(modes):
     
-    acc_fig, acc_ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=True)
-    acc_fig.suptitle('SVHN | mode: %s' % mode)
+    acc_fig, acc_ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    acc_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
     
-    sel_fig, sel_ax = plt.subplots(4,4, figsize=(19,9), sharex=True, sharey=True)
-    sel_fig.suptitle('SVHN | mode: %s' % mode)
+    sel_fig, sel_ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    sel_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
 
-    time_fig, time_ax = plt.subplots(4,4, figsize=(19,9), sharex=True)
-    time_fig.suptitle('SVHN | mode: %s' % mode)
+    time_fig, time_ax = plt.subplots(4,4, figsize=(15,7), sharex=True)
+    time_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
 
     for cs_id, cs in enumerate(chunk_size):
             
@@ -98,18 +98,21 @@ for m_id, mode in enumerate(modes):
             cols = plt.cm.Blues(np.linspace(0.3,0.9,5))
 
             if n_c_id==0:
-                acc_ax[n_c_id, cs_id].set_title('size:%i' % cs)
+                acc_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
             if cs_id==0:
-                acc_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nacc' % nc, fontsize=12)
+                acc_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nacc' % nc, fontsize=13)
             
             acc_ax[n_c_id, cs_id].grid(ls=':')
             
             for clf_id in range(5):
                 temp = np.mean(accs[:, cs_id, n_c_id, m_id, :, clf_id], axis=0)
                 acc_ax[n_c_id, cs_id].plot(gaussian_filter1d(temp, sigma), c=cols[clf_id], alpha=0.5)
+             
             
             temp = np.mean(np.array(_this_acc_all), axis=0)
             acc_ax[n_c_id, cs_id].plot(gaussian_filter1d(temp, sigma), c='r', alpha=0.75)
+            acc_ax[n_c_id, cs_id].spines['top'].set_visible(False)
+            acc_ax[n_c_id, cs_id].spines['right'].set_visible(False)
 
 
             acc_fig.tight_layout()            
@@ -120,9 +123,9 @@ for m_id, mode in enumerate(modes):
             
             # Plot time
             if n_c_id==0:
-                time_ax[n_c_id, cs_id].set_title('size:%i' % cs)
+                time_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
             if cs_id==0:
-                time_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nseconds' % nc, fontsize=12)
+                time_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nseconds' % nc, fontsize=13)
             
             time_ax[n_c_id, cs_id].grid(ls=':')
             
@@ -132,6 +135,8 @@ for m_id, mode in enumerate(modes):
                 
             temp = np.mean(np.array(_this_time_all), axis=0)
             time_ax[n_c_id, cs_id].plot(gaussian_filter1d(temp, sigma), c='r', alpha=0.75)
+            time_ax[n_c_id, cs_id].spines['top'].set_visible(False)
+            time_ax[n_c_id, cs_id].spines['right'].set_visible(False)
 
             time_fig.tight_layout()            
             time_fig.savefig('foo.png')                           
@@ -140,14 +145,16 @@ for m_id, mode in enumerate(modes):
             
             # Plot sel
             if n_c_id==0:
-                sel_ax[n_c_id, cs_id].set_title('size:%i' % cs)
+                sel_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
             if cs_id==0:
-                sel_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nindex' % nc, fontsize=12)
+                sel_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nindex' % nc, fontsize=13)
             
             sel_ax[n_c_id, cs_id].grid(ls=':')
             
             temp = np.mean(np.array(selected_all), axis=0)
             sel_ax[n_c_id, cs_id].scatter(np.arange(len(temp)), temp, c='r', alpha=0.25, s=5)
+            sel_ax[n_c_id, cs_id].spines['top'].set_visible(False)
+            sel_ax[n_c_id, cs_id].spines['right'].set_visible(False)
 
             sel_fig.tight_layout()            
             sel_fig.savefig('foo.png')                           

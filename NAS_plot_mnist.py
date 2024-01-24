@@ -44,10 +44,13 @@ for i, l in enumerate(labels):
     c = cmap[i]
     c_m = cmap_mono[i]
     ax.scatter(res_m[i,0], res_m[i,1], label=l, color=c if l in selected else c_m, marker=markers[i], s=100 if l in selected else 50)
-ax.set_xlabel('accuracy')
-ax.set_ylabel('inference time')
+ax.set_xlabel('accuracy',fontsize=12)
+ax.set_ylabel('inference time',fontsize=12)
 
 ax.grid(ls=':')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
 
 plt.legend(frameon=False)
 
