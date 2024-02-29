@@ -37,7 +37,7 @@ for mode_id, mode in enumerate(modes):
                 ax[-1, c_id].set_xlabel('selected architecture', fontsize=12)
 
             if c_id==0:
-                ax[n_c_id, c_id].set_ylabel('cycles:%i \n chunks processed' % n_c, fontsize=12)
+                ax[n_c_id, c_id].set_ylabel('cycles:%i \n selected architecture' % n_c, fontsize=12)
             ax[n_c_id, c_id].grid(ls=':')
 
             aa = m_counts[c_id, n_c_id, mode_id]
