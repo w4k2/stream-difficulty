@@ -1,8 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-r_time_loss = np.linspace(0.3,0.9,100)
-r_acc_loss = np.linspace(0.001,0.035,100)
+
+q = 100
+
+rt_min, rt_max = 0.3, 0.9
+ra_min, ra_max = 0.001, 0.035
+
+r_time_loss = np.linspace(rt_min, rt_max, q)
+r_acc_loss = np.linspace(ra_min, ra_max,q)
 
 r_t_a_m = np.load('results/r_t_a_m.npy')
 t_m = r_t_a_m[...,0].flatten()
@@ -42,4 +48,46 @@ ax.spines['right'].set_visible(False)
 ax.grid(ls=':')
 plt.legend()
 plt.tight_layout()
+plt.savefig('foo.png')
+plt.close()
+
+
+
+fig, ax = plt.subplots(1,1,figsize=(8,8/1.618))
+#plt.suptitle('TTAG')
+
+ax.imshow(ttag.reshape(xx.shape[0], yy.shape[0]), origin='lower', cmap='coolwarm',
+          aspect=0.618, interpolation='none')
+
+a = 15
+# ax.set_xticks(r_time_loss[::a], ['%0.3f' % t for t in r_time_loss][::a])
+
+ax.set_xlabel('relative time loss')
+ax.set_xticks(np.linspace(0,q-1,q)[::a], ['%0.3f' % t for t in r_time_loss][::a])
+
+ax.set_ylabel('relative accuracy loss')
+ax.set_yticks(np.linspace(0,q-1,q)[::a], ['%0.3f' % t for t in r_acc_loss][::a])
+
+# ax.set_xlim(0.3, 0.9)
+# ax.set_ylim(0.001, 0.035)
+
+
+
+t_ms = q * (t_m - rt_min) / (rt_max - rt_min)
+a_ms = q * (a_m - ra_min) / (ra_max - ra_min)
+
+t_ss = q * (t_s - rt_min) / (rt_max - rt_min)
+a_ss = q * (a_s - ra_min) / (ra_max - ra_min)
+
+ax.scatter(t_ms, a_ms, color='white', marker='o', s=100)
+ax.scatter(t_ms, a_ms, color='red', marker='o', label='MNIST')
+ax.scatter(t_ss, a_ss, color='white', marker='o', s=100)
+ax.scatter(t_ss, a_ss, color='blue', marker='o', label='SVHN')
+
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.grid(ls=':')
+plt.legend()
+plt.tight_layout()
+plt.savefig('ttag.eps')
 plt.savefig('foo.png')
