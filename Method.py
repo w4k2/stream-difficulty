@@ -16,8 +16,8 @@ class CDoS:
         self.training_support_level = training_support_level # do tej wartości wsparcia uczone są wszystkie klasyfikatory
         self.max_training_epochs = max_training_epochs # ale jest limit
         
-        self.curr_clf_id = 0 # zaczynamy od najgłupszego
-        self.switch_count = 0 # licznik
+        self.curr_clf_id = 0
+        self.switch_count = 0
             
         
     def partial_fit(self, X, y, classes):
@@ -29,7 +29,7 @@ class CDoS:
                         break
                     clf.partial_fit(X,y) 
  
-                except: # Wysypie się na 1. chunku
+                except: # 1st chunk
                     clf.partial_fit(X,y,classes)
                     
         return self
