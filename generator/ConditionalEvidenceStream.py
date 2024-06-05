@@ -1,4 +1,4 @@
-from concepts import cp2evidence
+from generator.concepts import cp2evidence
 import numpy as np
 
 class ConditionalEvidenceStream():

@@ -1,4 +1,4 @@
-from architectures import *
+from methods.architectures import *
 import numpy as np
 import torchvision
 import torch

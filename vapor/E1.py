@@ -3,14 +3,14 @@ import torch
 import torch.nn as nn
 import numpy as np
 from sklearn.decomposition import PCA
-from ConditionalEvidenceStream import ConditionalEvidenceStream
-from utils import make_condition_map, mix_to_factor
-import concepts
+from generator.ConditionalEvidenceStream import ConditionalEvidenceStream
+from generator.utils import make_condition_map, mix_to_factor
+import generator.concepts as concepts
 import torch
 import torchvision
 import time
 from sklearn.metrics import accuracy_score
-from Method import CDoS_T
+from methods.Method import CDoS_T
 from tqdm import tqdm
 
 np.random.seed(1223)

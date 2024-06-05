@@ -3,11 +3,11 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 import numpy as np
 from sklearn.decomposition import PCA
-import concepts
+import generator.concepts as concepts
 import torchvision
 from torchvision.transforms import Compose, ToTensor
-from ConditionalEvidenceStream import ConditionalEvidenceStream
-from utils import make_condition_map, mix_to_factor
+from generator.ConditionalEvidenceStream import ConditionalEvidenceStream
+from generator.utils import make_condition_map, mix_to_factor
 from scipy.ndimage import gaussian_filter1d
 
 np.set_printoptions(precision=3, suppress=True)

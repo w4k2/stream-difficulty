@@ -1,10 +1,10 @@
-import concepts
+import generator.concepts as concepts
 import numpy as np
 import torchvision
 from torchvision.transforms import Compose, ToTensor
 from sklearn.decomposition import PCA
-from ConditionalEvidenceStream import ConditionalEvidenceStream
-from utils import make_condition_map, mix_to_factor
+from generator.ConditionalEvidenceStream import ConditionalEvidenceStream
+from generator.utils import make_condition_map, mix_to_factor
 
 np.set_printoptions(precision=3, suppress=True)
 

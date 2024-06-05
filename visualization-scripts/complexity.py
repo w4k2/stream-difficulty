@@ -2,9 +2,9 @@ from problexity import ComplexityCalculator
 from problexity.classification import *
 from sklearn.decomposition import PCA
 import numpy as np
-from ConditionalEvidenceStream import ConditionalEvidenceStream
-from concepts import concept_proba
-from utils import make_condition_map, mix_to_factor
+from generator.ConditionalEvidenceStream import ConditionalEvidenceStream
+from generator.concepts import concept_proba
+from generator.utils import make_condition_map, mix_to_factor
 import torch
 import torchvision
 import json
