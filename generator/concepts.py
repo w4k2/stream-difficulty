@@ -39,7 +39,6 @@ def concept_proba(n_concepts=N_CONCEPTS, n_chunks=N_CHUNKS,
                                                            sigma=sigma)
 
     if compression is not None:
-        # TODO: to nie jest do końca ładnie
         space = np.logspace(0,compression_factor,n_chunks) - 1
         space -= np.min(space)
         space /= np.max(space)

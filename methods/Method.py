@@ -1,10 +1,9 @@
 """
-Certainty-based Domain Selector
+Certainty-based Architecture Selection Framework
 """
 
 import numpy as np
 import torch
-from torch.utils.data import TensorDataset, DataLoader
 import torch.nn as nn
 
 class CDoS:
@@ -56,14 +55,14 @@ class CDoS:
         return np.argmax(proba, axis=1)
 
 
-class CDoS_T:
+class CDoS_T: # version for torch architectures
     def __init__(self, clfs, thresholds, switch_when=10):
-        self.clfs = clfs # lista klasyfikatorów
-        self.thresholds = thresholds # lista progów (tej samej długości co lista klasyfiaktorów) i najwyższy próg musi nie być przekraczalny bo się wysypie
-        self.switch_when = switch_when # ile pod rząd musi przekroczyć próg
+        self.clfs = clfs
+        self.thresholds = thresholds
+        self.switch_when = switch_when
                 
-        self.curr_clf_id = int(len(self.clfs)/2) # zaczynamy od średniego
-        self.switch_count = 0 # licznik
+        self.curr_clf_id = int(len(self.clfs)/2)
+        self.switch_count = 0
 
     def predict(self, X):
         

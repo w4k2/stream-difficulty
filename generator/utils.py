@@ -6,7 +6,7 @@ import torch.nn as nn
 
 # Maska co najmniej
 def make_condition_map(n_cycles, n_concepts, factor, factor_range):
-    # Factor mus be the size of a problem
+    # Factor must be the size of a problem
     # Decydujemy, ile chcemy uzyskać cyklów warunkowych i wytwarzamy
     # odpowiednią sinusoidę. Dalej normalizujemy ją przedziałowo i kwantyzujemy
     # do liczby koncepcji tak, aby można było ją wykorzystać jako zbiór indeksów
