@@ -4,7 +4,8 @@ from scipy.ndimage import gaussian_filter1d
 
 # Setup
 n_chunks = 1000
-chunk_size = [50, 150, 300, 500]
+chunk_size = np.array([50, 150, 300, 500])
+chunk_size_mask = np.array([1,0,1,0]).astype(bool)
 n_cycles = [3, 5, 10, 25]
 modes = {
     'instant': {'mode': 'instant'},
@@ -21,20 +22,23 @@ print(accs.shape)
 print(times.shape)
 print(sel.shape)
 
-accs_m = np.mean(accs, axis=0) 
-times_m = np.mean(times, axis=0)
-sel_m = np.mean(sel, axis=0) 
+accs_m = np.mean(accs, axis=0)[chunk_size_mask]
+times_m = np.mean(times, axis=0)[chunk_size_mask]
+sel_m = np.mean(sel, axis=0)[chunk_size_mask]
+
+# print(accs_m.shape)
+# exit()
 
 
 # Accuracy
 s = 3
 cols = plt.cm.Blues(np.linspace(0.3,0.9,5))
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    fig, ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=True)
     plt.suptitle('MNIST | mode: %s' % mode, fontsize=15)
 
     for n_c_id, n_c in enumerate(n_cycles):
-        for c_id, c in enumerate(chunk_size):
+        for c_id, c in enumerate(chunk_size[chunk_size_mask]):
 
             if n_c_id==0:
                 ax[n_c_id, c_id].set_title('size:%i' % c, fontsize=13)
@@ -57,15 +61,16 @@ for mode_id, mode in enumerate(modes):
     plt.tight_layout()            
     plt.savefig('fig/mnist/m_acc_%s.png' % mode)
     plt.savefig('fig/mnist/m_acc_%s.eps' % mode)
+    plt.savefig('foo.png')
 
 # Time
 
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=False)
+    fig, ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=False)
     plt.suptitle('MNIST | mode: %s' % mode)
 
     for n_c_id, n_c in enumerate(n_cycles):
-        for c_id, c in enumerate(chunk_size):
+        for c_id, c in enumerate(chunk_size[chunk_size_mask]):
             
             if n_c_id==0:
                 ax[n_c_id, c_id].set_title('size:%i' % c, fontsize=13)
@@ -88,16 +93,17 @@ for mode_id, mode in enumerate(modes):
     plt.tight_layout()                          
     plt.savefig('fig/mnist/m_time_%s.png' % mode)
     plt.savefig('fig/mnist/m_time_%s.eps' % mode)
+    plt.savefig('foo.png')
     
     
 # Selection
 
 for mode_id, mode in enumerate(modes):
-    fig, ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    fig, ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=True)
     plt.suptitle('MNIST | mode: %s' % mode)
     
     for n_c_id, n_c in enumerate(n_cycles):
-        for c_id, c in enumerate(chunk_size):
+        for c_id, c in enumerate(chunk_size[chunk_size_mask]):
             
             if n_c_id==0:
                 ax[n_c_id, c_id].set_title('size:%i' % c, fontsize=13)
@@ -113,4 +119,5 @@ for mode_id, mode in enumerate(modes):
     plt.tight_layout()            
     plt.savefig('fig/mnist/m_sel_%s.png' % mode)
     plt.savefig('fig/mnist/m_sel_%s.eps' % mode)
+    plt.savefig('foo.png')
 

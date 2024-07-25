@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 
 n_chunks = 1000
-chunk_size = [50, 150, 300, 500]
+chunk_size = np.array([50, 150, 300, 500])
+chunk_size_mask = np.array([1,0,1,0]).astype(bool)
 n_cycles = [3, 5, 10, 25]
 modes = {
     'instant': {'mode': 'instant'},
@@ -30,21 +31,22 @@ thresholds_all = [
     [1., 0.91, 0.86, 0.855, 0.85], # chunk size = 300
     [1., 0.89, 0.86, 0.855,  0.85] # chunk size = 500
 ]
+thresholds_all = np.array(thresholds_all)[chunk_size_mask]
 
-res_selected = np.zeros((5, 4, 4, 3, 1000)) #(repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
+res_selected = np.zeros((5, 2, 4, 3, 1000)) #(repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
 
 for m_id, mode in enumerate(modes):
     
-    acc_fig, acc_ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    acc_fig, acc_ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=True)
     acc_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
     
-    sel_fig, sel_ax = plt.subplots(4,4, figsize=(15,7), sharex=True, sharey=True)
+    sel_fig, sel_ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=True)
     sel_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
 
-    time_fig, time_ax = plt.subplots(4,4, figsize=(15,7), sharex=True)
+    time_fig, time_ax = plt.subplots(4,2, figsize=(8,7), sharex=True)
     time_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
 
-    for cs_id, cs in enumerate(chunk_size):
+    for cs_id, cs in enumerate(chunk_size[chunk_size_mask]):
             
         for n_c_id, nc in enumerate(n_cycles):
             
