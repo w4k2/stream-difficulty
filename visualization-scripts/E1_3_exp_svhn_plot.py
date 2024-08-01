@@ -2,11 +2,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
+from scipy.stats import mode as np_mode
 
 n_chunks = 1000
 chunk_size = np.array([50, 150, 300, 500])
-# chunk_size_mask = np.array([1,0,1,0]).astype(bool)
-chunk_size_mask = np.array([1,1,1,1]).astype(bool)
+chunk_size_mask = np.array([1,0,1,0]).astype(bool)
+# chunk_size_mask = np.array([1,1,1,1]).astype(bool)
 n_cycles = [3, 5, 10, 25]
 modes = {
     'instant': {'mode': 'instant'},
@@ -107,7 +108,7 @@ for m_id, mode in enumerate(modes):
                 acc_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
                 acc_ax[-1, cs_id].set_xlabel('chunk', fontsize=13)
             if cs_id==0:
-                acc_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nacc' % nc, fontsize=13)
+                acc_ax[n_c_id, cs_id].set_ylabel('cycles:%i \naccuracy' % nc, fontsize=13)
             
             acc_ax[n_c_id, cs_id].grid(ls=':')
             
@@ -163,10 +164,15 @@ for m_id, mode in enumerate(modes):
             sel_ax[n_c_id, cs_id].grid(ls=':')
             
             print('aaaa', np.unique(selected_all, return_counts=True))
-            temp_m = gaussian_filter1d(np.mean(np.array(selected_all), axis=0),3)
+            # temp_m = gaussian_filter1d(np.mean(np.array(selected_all), axis=0),3)
+            temp_m = np_mode(np.array(selected_all), axis=0)[0]
+            temp_mean = gaussian_filter1d(np.mean(np.array(selected_all), axis=0),3)
+            print(temp_m)
             temp_std = np.std(np.array(selected_all), axis=0)
-            sel_ax[n_c_id, cs_id].plot(np.arange(1000), temp_m, c='r', alpha=1)
-            sel_ax[n_c_id, cs_id].fill_between(np.arange(1000), temp_m-temp_std, temp_m+temp_std, color='r', alpha=0.15, edgecolor='white')
+            sel_ax[n_c_id, cs_id].fill_between(np.arange(1000), temp_mean-temp_std, temp_mean+temp_std, color=[1,0.85,0.85], alpha=1, edgecolor='white')
+
+            sel_ax[n_c_id, cs_id].plot(np.arange(1000), temp_mean, c='r', alpha=1)
+            sel_ax[n_c_id, cs_id].scatter(np.arange(1000), temp_m, c='gray', alpha=1, s=5, zorder=100)
             
             # selected_all = np.array(selected_all)
             # print(selected_all.shape)
@@ -187,4 +193,4 @@ for m_id, mode in enumerate(modes):
             
 
     
-np.save('results/e1_selected_3.npy', res_selected)
+# np.save('results/e1_selected_3.npy', res_selected)

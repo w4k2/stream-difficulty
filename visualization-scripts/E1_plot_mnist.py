@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
+from scipy.stats import mode as np_mode
 
 # Setup
 n_chunks = 1000
@@ -114,7 +115,7 @@ for mode_id, mode in enumerate(modes):
                 ax[-1, c_id].set_xlabel('chunk', fontsize=13)
 
             if c_id==0:
-                ax[n_c_id, c_id].set_ylabel('cycles:%i \nclf index' % n_c, fontsize=13)
+                ax[n_c_id, c_id].set_ylabel('cycles:%i \nindex' % n_c, fontsize=13)
             ax[n_c_id, c_id].grid(ls=':')
             ax[n_c_id, c_id].spines['top'].set_visible(False)
             ax[n_c_id, c_id].spines['right'].set_visible(False)
@@ -122,10 +123,15 @@ for mode_id, mode in enumerate(modes):
             temp = sel[:,chunk_size_mask][:,c_id, n_c_id, mode_id]
             print(temp.shape)
             
-            temp_m = gaussian_filter1d(np.mean(temp, axis=0),2)
-            temp_std = np.std(temp, axis=0)
-            ax[n_c_id, c_id].plot(np.arange(1000), temp_m, c='r', alpha=1)
-            ax[n_c_id, c_id].fill_between(np.arange(1000), temp_m-temp_std, temp_m+temp_std, color='r', alpha=0.15, edgecolor='white')
+            # temp_m = gaussian_filter1d(np.mean(temp, axis=0),2)
+            temp_m = np_mode(np.array(temp), axis=0)[0]
+            temp_mean = gaussian_filter1d(np.mean(np.array(temp), axis=0),3)
+            print(temp_m)
+            temp_std = np.std(np.array(temp), axis=0)
+            ax[n_c_id, c_id].fill_between(np.arange(1000), temp_mean-temp_std, temp_mean+temp_std, color=[1,0.85,0.85], alpha=1, edgecolor='white')
+
+            ax[n_c_id, c_id].plot(np.arange(1000), temp_mean, c='r', alpha=1)
+            ax[n_c_id, c_id].scatter(np.arange(1000), temp_m, c='gray', alpha=1, s=5, zorder=100)
             
             
             ax[n_c_id, c_id].set_ylim(0,4)
