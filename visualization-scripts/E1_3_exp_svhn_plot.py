@@ -5,7 +5,8 @@ from scipy.ndimage import gaussian_filter1d
 
 n_chunks = 1000
 chunk_size = np.array([50, 150, 300, 500])
-chunk_size_mask = np.array([1,0,1,0]).astype(bool)
+# chunk_size_mask = np.array([1,0,1,0]).astype(bool)
+chunk_size_mask = np.array([1,1,1,1]).astype(bool)
 n_cycles = [3, 5, 10, 25]
 modes = {
     'instant': {'mode': 'instant'},
@@ -26,14 +27,17 @@ switch_count = 0
 switch_when = 10
 
 thresholds_all = [
-    [1., 0.95, 0.87, 0.85, 0.84], # chunk size = 50
-    [1., 0.92, 0.86, 0.85, 0.84], # chunk size = 150
-    [1., 0.91, 0.86, 0.855, 0.85], # chunk size = 300
-    [1., 0.89, 0.86, 0.855,  0.85] # chunk size = 500
+    [1., 0.95, 0.87, 0.85, 0.845], # chunk size = 50
+    [1., 0.92, 0.86, 0.85, 0.845], # chunk size = 150
+    [1., 0.91, 0.86, 0.855, 0.852], # chunk size = 300
+    [1., 0.89, 0.86, 0.855,  0.852] # chunk size = 500
 ]
-thresholds_all = np.array(thresholds_all)[chunk_size_mask]
 
-res_selected = np.zeros((5, 2, 4, 3, 1000)) #(repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
+
+thresholds_all = np.array(thresholds_all)[chunk_size_mask]
+thresholds_all[:,1] -= 0.02
+
+res_selected = np.zeros((5, np.sum(chunk_size_mask), 4, 3, 1000)) #(repeats, len(chunk_size), len(n_cycles), len(modes), n_chunks))
 
 for m_id, mode in enumerate(modes):
     
@@ -92,7 +96,7 @@ for m_id, mode in enumerate(modes):
                 _this_time_all.append(_this_time)
                 selected_all.append(selected)
                 
-                print(np.unique(selected_all, return_counts=True))
+                # print(np.unique(selected_all, return_counts=True))
             
                                 
             # Plot accuracy
@@ -101,6 +105,7 @@ for m_id, mode in enumerate(modes):
 
             if n_c_id==0:
                 acc_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
+                acc_ax[-1, cs_id].set_xlabel('chunk', fontsize=13)
             if cs_id==0:
                 acc_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nacc' % nc, fontsize=13)
             
@@ -126,6 +131,8 @@ for m_id, mode in enumerate(modes):
             # Plot time
             if n_c_id==0:
                 time_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
+                time_ax[-1, cs_id].set_xlabel('chunk', fontsize=13)
+
             if cs_id==0:
                 time_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nseconds' % nc, fontsize=13)
             
@@ -148,20 +155,36 @@ for m_id, mode in enumerate(modes):
             # Plot sel
             if n_c_id==0:
                 sel_ax[n_c_id, cs_id].set_title('size:%i' % cs, fontsize=13)
+                sel_ax[-1, cs_id].set_xlabel('chunk', fontsize=13)
+
             if cs_id==0:
                 sel_ax[n_c_id, cs_id].set_ylabel('cycles:%i \nindex' % nc, fontsize=13)
             
             sel_ax[n_c_id, cs_id].grid(ls=':')
             
-            temp = np.mean(np.array(selected_all), axis=0)
-            sel_ax[n_c_id, cs_id].scatter(np.arange(len(temp)), temp, c='r', alpha=0.25, s=5)
+            print('aaaa', np.unique(selected_all, return_counts=True))
+            temp_m = gaussian_filter1d(np.mean(np.array(selected_all), axis=0),3)
+            temp_std = np.std(np.array(selected_all), axis=0)
+            sel_ax[n_c_id, cs_id].plot(np.arange(1000), temp_m, c='r', alpha=1)
+            sel_ax[n_c_id, cs_id].fill_between(np.arange(1000), temp_m-temp_std, temp_m+temp_std, color='r', alpha=0.15, edgecolor='white')
+            
+            # selected_all = np.array(selected_all)
+            # print(selected_all.shape)
+            # for rep in range(5):
+                # sel_ax[n_c_id, cs_id].scatter(np.arange(1000), selected_all[rep], c='r', alpha=0.05, s=5)
+                
             sel_ax[n_c_id, cs_id].spines['top'].set_visible(False)
             sel_ax[n_c_id, cs_id].spines['right'].set_visible(False)
+            
+            sel_ax[n_c_id, cs_id].set_ylim(0,4)
+
 
             sel_fig.tight_layout()            
             sel_fig.savefig('foo.png')                           
             sel_fig.savefig('fig/svhn/sel_%s.png' % mode)
             sel_fig.savefig('fig/svhn/sel_%s.eps' % mode)
-    # exit()
+            
+            
+
     
 np.save('results/e1_selected_3.npy', res_selected)

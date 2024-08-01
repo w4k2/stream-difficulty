@@ -53,7 +53,7 @@ plt.close()
 
 
 
-fig, ax = plt.subplots(1,1,figsize=(8,8/1.618))
+fig, ax = plt.subplots(1,1,figsize=(7,7/1.618))
 #plt.suptitle('TTAG')
 
 ax.imshow(ttag.reshape(xx.shape[0], yy.shape[0]), origin='lower', cmap='coolwarm',
@@ -79,10 +79,10 @@ a_ms = q * (a_m - ra_min) / (ra_max - ra_min)
 t_ss = q * (t_s - rt_min) / (rt_max - rt_min)
 a_ss = q * (a_s - ra_min) / (ra_max - ra_min)
 
-ax.scatter(t_ms, a_ms, color='white', marker='o', s=100)
-ax.scatter(t_ms, a_ms, color='red', marker='o', label='MNIST')
-ax.scatter(t_ss, a_ss, color='white', marker='o', s=100)
-ax.scatter(t_ss, a_ss, color='blue', marker='o', label='SVHN')
+ax.scatter(t_ms, a_ms, color='white', marker='o', s=50)
+ax.scatter(t_ms, a_ms, color='red', marker='o', label='MNIST', s=25)
+ax.scatter(t_ss, a_ss, color='white', marker='o', s=50)
+ax.scatter(t_ss, a_ss, color='blue', marker='o', label='SVHN', s=25)
 
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
