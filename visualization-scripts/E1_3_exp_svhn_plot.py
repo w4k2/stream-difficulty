@@ -6,8 +6,8 @@ from scipy.stats import mode as np_mode
 
 n_chunks = 1000
 chunk_size = np.array([50, 150, 300, 500])
-chunk_size_mask = np.array([1,0,1,0]).astype(bool)
-# chunk_size_mask = np.array([1,1,1,1]).astype(bool)
+# chunk_size_mask = np.array([1,0,1,0]).astype(bool)
+chunk_size_mask = np.array([1,1,1,1]).astype(bool)
 n_cycles = [3, 5, 10, 25]
 modes = {
     'instant': {'mode': 'instant'},
@@ -42,13 +42,13 @@ res_selected = np.zeros((5, np.sum(chunk_size_mask), 4, 3, 1000)) #(repeats, len
 
 for m_id, mode in enumerate(modes):
     
-    acc_fig, acc_ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=True)
+    acc_fig, acc_ax = plt.subplots(4, np.sum(chunk_size_mask), figsize=(12,9), sharex=True, sharey=True)
     acc_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
     
-    sel_fig, sel_ax = plt.subplots(4,2, figsize=(8,7), sharex=True, sharey=True)
+    sel_fig, sel_ax = plt.subplots(4, np.sum(chunk_size_mask), figsize=(12,9), sharex=True, sharey=True)
     sel_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
 
-    time_fig, time_ax = plt.subplots(4,2, figsize=(8,7), sharex=True)
+    time_fig, time_ax = plt.subplots(4, np.sum(chunk_size_mask), figsize=(12,9), sharex=True)
     time_fig.suptitle('SVHN | mode: %s' % mode, fontsize=15)
 
     for cs_id, cs in enumerate(chunk_size[chunk_size_mask]):
@@ -163,7 +163,7 @@ for m_id, mode in enumerate(modes):
             
             sel_ax[n_c_id, cs_id].grid(ls=':')
             
-            print('aaaa', np.unique(selected_all, return_counts=True))
+            # print('aaaa', np.unique(selected_all, return_counts=True))
             # temp_m = gaussian_filter1d(np.mean(np.array(selected_all), axis=0),3)
             temp_m = np_mode(np.array(selected_all), axis=0)[0]
             temp_mean = gaussian_filter1d(np.mean(np.array(selected_all), axis=0),3)
@@ -190,7 +190,4 @@ for m_id, mode in enumerate(modes):
             sel_fig.savefig('fig/svhn/sel_%s.png' % mode)
             sel_fig.savefig('fig/svhn/sel_%s.eps' % mode)
             
-            
-
-    
 # np.save('results/e1_selected_3.npy', res_selected)
